@@ -1,3 +1,5 @@
+import { buildTree, Tree, Node } from "./classes.js";
+
 function insert(value, tree) {
   if (tree.root === null) {
     return new Node(value);
@@ -190,3 +192,94 @@ function recursivePostOrder(callback, tree) {
   const root = tree.root;
   recursion(root);
 }
+let test = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
+
+function height(myNode, tree) {
+  function recursion(node) {
+    if (node === null) {
+      return -1;
+    } else {
+      let leftHeight = recursion(node.left);
+      let rightHeight = recursion(node.right);
+      let currentHeight = Math.max(leftHeight, rightHeight) + 1;
+
+      if (myNode === node) {
+        return currentHeight;
+      }
+      return currentHeight;
+    }
+  }
+  const root = tree.root;
+  return recursion(root);
+}
+
+function depth(myNode, tree) {
+  let depth = -1;
+  function recursion(node) {
+    if (node === null) {
+      return;
+    } else {
+      depth++;
+      if (myNode === node) {
+        return depth;
+      }
+      let leftDepth = recursion(node.left);
+      if (!leftDepth === undefined) return leftDepth;
+      let rightDepth = recursion(node.right);
+      if (!rightDepth === undefined) return rightDepth;
+
+      depth--;
+      return;
+    }
+  }
+  const root = tree.root;
+  recursion(root);
+}
+
+function isBalanced(tree) {
+  function recursion(node) {
+    if (node === null) {
+      return -1;
+    } else {
+      let leftHeight = recursion(node.left);
+      if (leftHeight === false) {
+        return leftHeight;
+      }
+      let rightHeight = recursion(node.right);
+      if (rightHeight === false) {
+        return rightHeight;
+      }
+      let height = Math.max(leftHeight, rightHeight) + 1;
+
+      if (leftHeight - rightHeight > 1 || rightHeight - leftHeight > 1) {
+        return false;
+      }
+      return height;
+    }
+  }
+  const root = tree.root;
+
+  return recursion(root) !== false;
+}
+
+function reBalance(tree) {
+  if (isBalanced(tree)) {
+    return "Tree is already balanced";
+  }
+  const root = tree.root;
+  const queue = [root];
+  const newTree = [];
+  while (queue.length > 0) {
+    let node = queue.shift();
+    newTree.push(node.data);
+    if (node.left !== null) {
+      queue.push(node.left);
+    }
+    if (node.right !== null) {
+      queue.push(node.right);
+    }
+  }
+  return buildTree(newTree);
+}
+
+console.log(isBalanced(test));
