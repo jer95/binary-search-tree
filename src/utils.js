@@ -1,6 +1,14 @@
-import { buildTree, Tree, Node } from "./classes.js";
+import { buildTree, Node, Tree } from "./classes.js";
+export {
+  recursiveInOrder,
+  recursiveLevelOrder,
+  recursivePreOrder,
+  recursivePostOrder,
+  isBalanced,
+  reBalance,
+};
 
-function insert(value, tree) {
+export function insert(value, tree) {
   if (tree.root === null) {
     return new Node(value);
   }
@@ -105,7 +113,7 @@ function levelOrder(callback, tree) {
   }
 }
 
-function recursiveLevelOrder(tree, callback) {
+function recursiveLevelOrder(callback, tree) {
   if (callback === undefined) {
     throw Error("Pleas provide a callback");
   }
@@ -132,13 +140,9 @@ function recursiveLevelOrder(tree, callback) {
   recursion(defaultQueue);
 }
 
-function callback(node) {
-  console.log(node);
-}
-
 function recursiveInOrder(callback, tree) {
-  if (callback === undefined) {
-    throw Error("Pleas provide a callback");
+  if (typeof callback !== "function") {
+    throw Error("Please provide a callback");
   }
   if (!tree) return null;
 
@@ -157,7 +161,7 @@ function recursiveInOrder(callback, tree) {
 
 function recursivePreOrder(callback, tree) {
   if (callback === undefined) {
-    throw Error("Pleas provide a callback");
+    throw Error("Please provide a callback");
   }
   if (!tree) return null;
 
@@ -192,7 +196,6 @@ function recursivePostOrder(callback, tree) {
   const root = tree.root;
   recursion(root);
 }
-let test = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 
 function height(myNode, tree) {
   function recursion(node) {
@@ -243,27 +246,28 @@ function isBalanced(tree) {
     } else {
       let leftHeight = recursion(node.left);
       if (leftHeight === false) {
-        return leftHeight;
+        return false;
       }
       let rightHeight = recursion(node.right);
       if (rightHeight === false) {
-        return rightHeight;
-      }
-      let height = Math.max(leftHeight, rightHeight) + 1;
-
-      if (leftHeight - rightHeight > 1 || rightHeight - leftHeight > 1) {
         return false;
       }
-      return height;
+
+      if (Math.abs(leftHeight - rightHeight) > 1) {
+        return false;
+      }
+
+      return Math.max(leftHeight, rightHeight) + 1;
     }
   }
   const root = tree.root;
+  console.log(root);
 
   return recursion(root) !== false;
 }
 
 function reBalance(tree) {
-  if (isBalanced(tree)) {
+  if (isBalanced(tree) === true) {
     return "Tree is already balanced";
   }
   const root = tree.root;
@@ -279,7 +283,19 @@ function reBalance(tree) {
       queue.push(node.right);
     }
   }
-  return buildTree(newTree);
+  console.log(newTree);
+  return new Tree(newTree);
 }
 
-console.log(isBalanced(test));
+export const prettyPrint = (node, prefix = "", isLeft = true) => {
+  if (node === null) {
+    return;
+  }
+  if (node.right !== null) {
+    prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
+  }
+  console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
+  if (node.left !== null) {
+    prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+  }
+};
