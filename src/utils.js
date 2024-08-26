@@ -283,8 +283,8 @@ function reBalance(tree) {
       queue.push(node.right);
     }
   }
-  console.log(newTree);
-  return new Tree(newTree);
+  tree.root = buildTree(newTree);
+  return tree;
 }
 
 export const prettyPrint = (node, prefix = "", isLeft = true) => {
