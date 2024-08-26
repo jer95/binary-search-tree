@@ -1,4 +1,4 @@
-class Node {
+export class Node {
   constructor(data) {
     this.data = data;
     this.left = null;
@@ -6,13 +6,13 @@ class Node {
   }
 }
 
-class Tree {
+export class Tree {
   constructor(arr) {
     this.root = buildTree(arr);
   }
 }
 
-function buildTree(array) {
+export function buildTree(array) {
   let sortedArr = [];
   array
     .sort((a, b) => a - b)
